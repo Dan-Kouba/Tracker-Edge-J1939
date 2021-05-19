@@ -19,11 +19,15 @@
 #include "tracker_config.h"
 #include "tracker.h"
 
+#include "ARD1939.h"
+
 SYSTEM_THREAD(ENABLED);
 SYSTEM_MODE(SEMI_AUTOMATIC);
 
 PRODUCT_ID(TRACKER_PRODUCT_ID);
 PRODUCT_VERSION(TRACKER_PRODUCT_VERSION);
+
+ARD1939 j1939;
 
 STARTUP(
     Tracker::startup();
@@ -39,6 +43,25 @@ SerialLogHandler logHandler(115200, LOG_LEVEL_TRACE, {
 void setup()
 {
     Tracker::instance().init();
+
+    while (!Serial.isConnected()) {
+        Particle.process();
+        delay(1000);
+    }
+
+    delay(1000);
+    Log.log("Hello world!");
+
+    if(j1939.Init(SYSTEM_TIME) == 0)
+        Log.log("CAN Controller Init OK");
+    else
+        Log.error("CAN Controller Init Failed");
+    
+    // Set the preferred address and address range
+    j1939.SetPreferredAddress(SA_PREFERRED);
+    j1939.SetAddressRange(ADDRESSRANGEBOTTOM, ADDRESSRANGETOP);
+
+    Particle.connect();
 }
 
 void loop()
