@@ -1,7 +1,7 @@
 
-# Particle Tracker Edge Firmware
+# Particle Tracker Edge Firmware — J1939 Example
 
-Application reference firmware for the Particle Tracker.
+This firmware integrates Tracker Edge's CAN interface with a J1939 library from Copper Hill Technologies
 
 # Resources
 
